@@ -1,0 +1,88 @@
+Written Questions
+
+Q1. Run the web crawler using the configurations located at src/main/config/written_question_1a.json and
+    src/main/config/written_question_1b.json. The only difference between these configurations is that one always uses
+    the sequential crawler and the other always uses the parallel crawler. Inspect the profile output in
+    profileData.txt.
+
+    If you are using a multi-processor computer, you should notice that SequentialWebCrawler#crawl and
+    ParallelWebCrawler#crawl took about the same amount of time, but PageParserImpl#parse took much longer when run with
+    the ParallelWebCrawler.
+
+    Why did the parser take more time when run with ParallelWebCrawler?
+
+    Answer: The parser took more time when run with the ParallelWebCrawler because the Profiler aggregates the time
+    spent by the parse method across all threads. The record method in the ProfilingState class, which is utilized by
+    the ProfilingMethodInterceptor, accumulates the durations from each thread, leading to a higher overall time
+    recorded.
+
+
+Q2. Your manager ran your crawler on her old personal computer, using the configurations from Q1, and she notices that
+    the sequential crawler actually outperforms the parallel crawler. She would like to know why.
+
+    (a) Suggest one reason why the sequential web crawler was able to read more web pages than the parallel crawler.
+        (Hint: Try setting "parallelism" to 1 in the JSON configs to simulate your manager's computer.)
+
+        Answer: The parallel web crawler can be less efficient on a single-core computer because it attempts to
+        distribute tasks across multiple threads, which can lead to increased overhead and resource contention on a
+        system with limited processing power. The sequential web crawler, on the other hand, is optimized for running
+        tasks in a single thread without the overhead of managing multiple threads, making it more efficient on a
+        single-core system.
+
+    (b) Suggest one scenario in which the parallel web crawler will almost certainly perform better than the sequential
+        crawler. Why will it perform better?
+
+        Answer: The parallel web crawler will almost certainly perform better on a multi-core computer. In this
+        scenario, the parallel crawler can utilize multiple cores to execute tasks concurrently, significantly reducing
+        the overall time required to crawl and process web pages. The ability to perform multiple operations
+        simultaneously is what gives the parallel crawler a performance advantage in a multi-core environment.
+
+
+Q3. Analyze your method profiler through the lens of Aspect Oriented Programming, by answering the following questions:
+
+    (a) What cross-cutting concern is being addressed by the com.udacity.webcrawler.profiler.Profiler class?
+
+    Answer: The Profiler class addresses the cross-cutting concern of performance measurement across different parts of
+    the application. By profiling methods, it provides insights into the execution time of various operations, which is
+    a concern that spans multiple components of the web crawler.
+
+    (b) What are the join points of the Profiler in the web crawler program?
+
+    Answer: The join points of the Profiler in the web crawler program are the methods annotated with @Profiled. These
+    annotated methods are where the profiling logic is applied, allowing the Profiler to measure and record their
+    performance.
+
+
+Q4. Identify three (3) different design patterns used in this project, and explain which interfaces, classes, and/or
+    libraries use or implement those design patterns.
+
+    For each pattern, name one thing about the pattern that you LIKED, and one thing you DISLIKED. If you did not like
+    anything, you can name two things you disliked.
+
+    Answer:
+
+    Dependency Injection Pattern
+
+    1. Dependency Injection Pattern
+    - Usage: This pattern is used in the WebCrawlerMain and Profiler classes. It leverages the Guice framework to
+    inject dependencies into the classes.
+    - Liked: It simplifies testing and enhances modularity by decoupling class dependencies, making it easier to manage
+    and test individual components.
+    - Disliked: It can lead to an increased number of classes and interfaces, which can make the project structure more
+    complex and harder to navigate.
+
+    2. Builder Pattern
+    - Usage: The CrawlerConfiguration, CrawlResult, ParserModule classes, and PageParser interface utilize the Builder
+    pattern to construct objects.
+    - Liked: It simplifies the creation of complex objects by providing a clear and flexible way to build instances
+    with multiple parameters.
+    - Disliked: It can significantly increase the amount of code, as it requires additional builder classes and methods,
+    potentially leading to code bloat.
+
+    3. Proxy Pattern
+    - Usage: The ProfilerImpl class uses the Proxy pattern to dynamically handle method calls and apply profiling logic
+    at runtime.
+    - Liked: It provides a powerful way to add behavior to interfaces at runtime, such as logging or profiling, without
+    modifying the original code.
+    - Disliked: It can make the code more difficult to understand and maintain, as the actual logic is hidden behind
+    the proxy, making it less transparent to developers unfamiliar with the pattern.
