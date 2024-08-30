@@ -27,18 +27,15 @@ final class WordCounts {
      * @return a map containing the top {@param popularWordCount} words and counts in the right order.
      */
     static Map<String, Integer> sort(Map<String, Integer> wordCounts, int popularWordCount) {
+        // TODO: Reimplement this method using only the Stream API and lambdas and/or method references.
+        WordCountComparator wordCountComparator = new WordCountComparator();
         return wordCounts.entrySet()
                 .stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue(Comparator.reverseOrder()))
-                .limit(popularWordCount)
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
+                .sorted(wordCountComparator)
+                .limit(Math.min(popularWordCount, wordCounts.size()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (k, v) -> k, LinkedHashMap::new));
     }
-
 
     /**
      * A {@link Comparator} that sorts word count pairs correctly:
