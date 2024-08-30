@@ -51,10 +51,9 @@ public final class WebCrawlerMain {
         if (profilePath != null && !profilePath.trim().isEmpty()) {
             profiler.writeData(Paths.get(profilePath));
         } else {
-            try (Writer outputWriter = new OutputStreamWriter(System.out)) {
-                profiler.writeData(outputWriter);
-                outputWriter.flush();
-            }
+            Writer outputWriter = new OutputStreamWriter(System.out);
+            profiler.writeData(outputWriter);
+            outputWriter.flush();
         }
     }
 
