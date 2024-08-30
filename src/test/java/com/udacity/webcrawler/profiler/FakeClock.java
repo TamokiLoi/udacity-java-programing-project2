@@ -12,52 +12,52 @@ import java.util.Objects;
  */
 public final class FakeClock extends Clock {
 
-  private Instant now;
-  private ZoneId zoneId;
+    private Instant now;
+    private ZoneId zoneId;
 
-  @Inject
-  public FakeClock() {
-    this(Instant.now(), ZoneId.systemDefault());
-  }
+    @Inject
+    public FakeClock() {
+        this(Instant.now(), ZoneId.systemDefault());
+    }
 
-  public FakeClock(Instant now, ZoneId zoneId) {
-    this.now = Objects.requireNonNull(now);
-    this.zoneId = Objects.requireNonNull(zoneId);
-  }
+    public FakeClock(Instant now, ZoneId zoneId) {
+        this.now = Objects.requireNonNull(now);
+        this.zoneId = Objects.requireNonNull(zoneId);
+    }
 
-  @Override
-  public ZoneId getZone() {
-    return zoneId;
-  }
+    @Override
+    public ZoneId getZone() {
+        return zoneId;
+    }
 
-  @Override
-  public Clock withZone(ZoneId zone) {
-    return new FakeClock(now, zone);
-  }
+    @Override
+    public Clock withZone(ZoneId zone) {
+        return new FakeClock(now, zone);
+    }
 
-  @Override
-  public Instant instant() {
-    return now;
-  }
+    @Override
+    public Instant instant() {
+        return now;
+    }
 
-  /**
-   * Increments the time of the fake clock by the given amount.
-   */
-  public void tick(Duration duration) {
-    now = now.plus(Objects.requireNonNull(duration));
-  }
+    /**
+     * Increments the time of the fake clock by the given amount.
+     */
+    public void tick(Duration duration) {
+        now = now.plus(Objects.requireNonNull(duration));
+    }
 
-  /**
-   * Sets the time of the fake clock.
-   */
-  public void setTime(Instant instant) {
-    this.now = Objects.requireNonNull(instant);
-  }
+    /**
+     * Sets the time of the fake clock.
+     */
+    public void setTime(Instant instant) {
+        this.now = Objects.requireNonNull(instant);
+    }
 
-  /**
-   * Sets the zone of the fake clock.
-   */
-  public void setZone(ZoneId zoneId) {
-    this.zoneId = Objects.requireNonNull(zoneId);
-  }
+    /**
+     * Sets the zone of the fake clock.
+     */
+    public void setZone(ZoneId zoneId) {
+        this.zoneId = Objects.requireNonNull(zoneId);
+    }
 }

@@ -1,7 +1,6 @@
 package com.udacity.webcrawler.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import java.time.Duration;
 import java.util.LinkedHashSet;
@@ -14,7 +13,6 @@ import java.util.stream.Collectors;
 /**
  * A data class that represents the configuration of a single web crawl.
  */
-@JsonDeserialize(builder = CrawlerConfiguration.Builder.class)
 public final class CrawlerConfiguration {
 
     private final List<String> startPages;

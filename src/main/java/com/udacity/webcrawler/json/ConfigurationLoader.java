@@ -3,6 +3,7 @@ package com.udacity.webcrawler.json;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
@@ -28,12 +29,11 @@ public final class ConfigurationLoader {
      *
      * @return the loaded {@link CrawlerConfiguration}.
      */
-    public CrawlerConfiguration load() throws Exception{
-        try (Reader reader = Files.newBufferedReader(path)) {
+    public CrawlerConfiguration load() throws Exception {
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
             return read(reader);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to read file: " + path, e);
         }
     }
 
@@ -45,14 +45,15 @@ public final class ConfigurationLoader {
      */
     public static CrawlerConfiguration read(Reader reader) throws Exception {
         Objects.requireNonNull(reader);
-        ObjectMapper objMap = new ObjectMapper();
-        objMap.disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, false);
         try {
-            return  objMap.readValue(reader, CrawlerConfiguration.Builder.class).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e.getMessage());
+            return objectMapper.readValue(reader, CrawlerConfiguration.Builder.class).build();
+        } catch (Exception ex) {
+            System.err.println("Error parsing configuration: " + ex.getMessage());
+            throw new Exception("Failed to build CrawlerConfiguration", ex);
         }
+
     }
 
 }
